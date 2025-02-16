@@ -1,0 +1,129 @@
+Service:
+  RegionId: cn-hangzhou
+  DeployType: ros
+  OperationMetadata:
+    StatusOperationConfigs:
+      - TemplateName: ECS单机版
+        SupportOperations:
+          - Start
+          - Stop
+          - Restart
+    SupportBackup: true
+    ModifyParametersConfig:
+      - TemplateName: ECS单机版
+        Operation:
+          - Name: 变更ECS实例规格
+            Description: 变更ECS实例规格
+            Type: Custom
+            Parameters:
+              - EcsInstanceType
+          - Name: 变更ECS实例密码
+            Description: 变更ECS实例密码
+            Type: Custom
+            Parameters:
+              - InstancePassword
+  DeployMetadata:
+    SupplierDeployMetadata:
+      SupplierTemplateConfigs:
+        - Name: ECS单机版
+          Url: 'ros_templates/template.yaml'
+          ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+          AllowedRegions:
+            - ap-southeast-1
+      ArtifactRelation:
+        ecs_image_dify:
+          ArtifactId: ${Artifact.EcsImage.ArtifactId}
+          ArtifactVersion: draft
+    TemplateConfigs:
+      - Name: ECS单机版
+        Url: 'ros_templates/template.yaml'
+        ArchitectureDiagramUrl: 'resources/architecture/architecture.jpg'
+        AllowedRegions:
+          - ap-southeast-1
+  ServiceType: private
+  ServiceInfo:
+    # 英文版可以再配置Locale为en-US的服务信息
+    - Locale: zh-CN
+      ShortDescription: demo
+      Image: 'resources/icons/service_logo.png'
+Artifact:
+  EcsImage:
+    ArtifactType: EcsImage
+    ArtifactName: ecs_image_dify
+    Description: dify EcsImage
+    SupportRegionIds:
+        - ap-southeast-1
+    ArtifactBuildProperty:
+      CodeRepo:
+        Platform: github
+        Owner: zhidong010
+        RepoName: zhidong010/dify
+        Branch: main
+      RegionId: ap-southeast-1
+      CommandType: RunShellScript
+      CommandContent: |-
+        mkdir -p /root/application
+        mkdir -p "/root/application/docker"
+        if [ -e "/root/code/docker/startupscripts" ]; then cp -r "/root/code/docker/startupscripts" "/root/application/docker/"; fi
+        mkdir -p "/root/application/docker/volumes/certbot"
+        if [ -e "/root/code/docker/volumes/certbot/www" ]; then cp -r "/root/code/docker/volumes/certbot/www" "/root/application/docker/volumes/certbot/"; fi
+        if [ -e "/root/code/docker/.env.example" ]; then cp -r "/root/code/docker/.env.example" "/root/application/docker/"; fi
+        mkdir -p "/root/application/docker/nginx"
+        if [ -e "/root/code/docker/nginx/proxy.conf.template" ]; then cp -r "/root/code/docker/nginx/proxy.conf.template" "/root/application/docker/nginx/"; fi
+        mkdir -p "/root/application/docker/volumes"
+        if [ -e "/root/code/docker/volumes/qdrant" ]; then cp -r "/root/code/docker/volumes/qdrant" "/root/application/docker/volumes/"; fi
+        mkdir -p "/root/application/docker/volumes/opensearch"
+        if [ -e "/root/code/docker/volumes/opensearch/opensearch_dashboards.yml" ]; then cp -r "/root/code/docker/volumes/opensearch/opensearch_dashboards.yml" "/root/application/docker/volumes/opensearch/"; fi
+        if [ -e "/root/code/docker/dify_es01_data" ]; then cp -r "/root/code/docker/dify_es01_data" "/root/application/docker/"; fi
+        if [ -e "/root/code/docker/volumes/certbot/conf" ]; then cp -r "/root/code/docker/volumes/certbot/conf" "/root/application/docker/volumes/certbot/"; fi
+        mkdir -p "/root/application/docker/volumes/pgvector"
+        if [ -e "/root/code/docker/volumes/pgvector/data" ]; then cp -r "/root/code/docker/volumes/pgvector/data" "/root/application/docker/volumes/pgvector/"; fi
+        mkdir -p "/root/application/docker/volumes/myscale"
+        if [ -e "/root/code/docker/volumes/myscale/data" ]; then cp -r "/root/code/docker/volumes/myscale/data" "/root/application/docker/volumes/myscale/"; fi
+        mkdir -p "/root/application/docker/certbot"
+        if [ -e "/root/code/docker/certbot/docker-entrypoint.sh" ]; then cp -r "/root/code/docker/certbot/docker-entrypoint.sh" "/root/application/docker/certbot/"; fi
+        mkdir -p "/root/application/docker/volumes/db"
+        if [ -e "/root/code/docker/volumes/db/data" ]; then cp -r "/root/code/docker/volumes/db/data" "/root/application/docker/volumes/db/"; fi
+        if [ -e "/root/code/docker/volumes/certbot/logs" ]; then cp -r "/root/code/docker/volumes/certbot/logs" "/root/application/docker/volumes/certbot/"; fi
+        if [ -e "/root/code/docker/nginx/conf.d" ]; then cp -r "/root/code/docker/nginx/conf.d" "/root/application/docker/nginx/"; fi
+        mkdir -p "/root/application/docker/volumes/milvus"
+        if [ -e "/root/code/docker/volumes/milvus/minio" ]; then cp -r "/root/code/docker/volumes/milvus/minio" "/root/application/docker/volumes/milvus/"; fi
+        if [ -e "/root/code/docker/nginx/ssl" ]; then cp -r "/root/code/docker/nginx/ssl" "/root/application/docker/nginx/"; fi
+        mkdir -p "/root/application/docker/volumes/oceanbase"
+        if [ -e "/root/code/docker/volumes/oceanbase/init.d" ]; then cp -r "/root/code/docker/volumes/oceanbase/init.d" "/root/application/docker/volumes/oceanbase/"; fi
+        if [ -e "/root/code/docker/volumes/chroma" ]; then cp -r "/root/code/docker/volumes/chroma" "/root/application/docker/volumes/"; fi
+        if [ -e "/root/code/docker/volumes/milvus/milvus" ]; then cp -r "/root/code/docker/volumes/milvus/milvus" "/root/application/docker/volumes/milvus/"; fi
+        mkdir -p "/root/application/docker/ssrf_proxy"
+        if [ -e "/root/code/docker/ssrf_proxy/docker-entrypoint.sh" ]; then cp -r "/root/code/docker/ssrf_proxy/docker-entrypoint.sh" "/root/application/docker/ssrf_proxy/"; fi
+        mkdir -p "/root/application/docker/volumes/myscale/config/users.d"
+        if [ -e "/root/code/docker/volumes/myscale/config/users.d/custom_users_config.xml" ]; then cp -r "/root/code/docker/volumes/myscale/config/users.d/custom_users_config.xml" "/root/application/docker/volumes/myscale/config/users.d/"; fi
+        if [ -e "/root/code/docker/ssrf_proxy/squid.conf.template" ]; then cp -r "/root/code/docker/ssrf_proxy/squid.conf.template" "/root/application/docker/ssrf_proxy/"; fi
+        if [ -e "/root/code/docker/certbot/update-cert.template.txt" ]; then cp -r "/root/code/docker/certbot/update-cert.template.txt" "/root/application/docker/certbot/"; fi
+        mkdir -p "/root/application/docker/volumes/redis"
+        if [ -e "/root/code/docker/volumes/redis/data" ]; then cp -r "/root/code/docker/volumes/redis/data" "/root/application/docker/volumes/redis/"; fi
+        if [ -e "/root/code/docker/volumes/myscale/log" ]; then cp -r "/root/code/docker/volumes/myscale/log" "/root/application/docker/volumes/myscale/"; fi
+        if [ -e "/root/code/docker/docker-compose.yaml" ]; then cp -r "/root/code/docker/docker-compose.yaml" "/root/application/docker/"; fi
+        mkdir -p "/root/application/docker/volumes/app"
+        if [ -e "/root/code/docker/volumes/app/storage" ]; then cp -r "/root/code/docker/volumes/app/storage" "/root/application/docker/volumes/app/"; fi
+        mkdir -p "/root/application/docker/elasticsearch"
+        if [ -e "/root/code/docker/elasticsearch/docker-entrypoint.sh" ]; then cp -r "/root/code/docker/elasticsearch/docker-entrypoint.sh" "/root/application/docker/elasticsearch/"; fi
+        if [ -e "/root/code/docker/volumes/oceanbase/data" ]; then cp -r "/root/code/docker/volumes/oceanbase/data" "/root/application/docker/volumes/oceanbase/"; fi
+        if [ -e "/root/code/docker/volumes/oceanbase/conf" ]; then cp -r "/root/code/docker/volumes/oceanbase/conf" "/root/application/docker/volumes/oceanbase/"; fi
+        mkdir -p "/root/application/docker/volumes/pgvecto_rs"
+        if [ -e "/root/code/docker/volumes/pgvecto_rs/data" ]; then cp -r "/root/code/docker/volumes/pgvecto_rs/data" "/root/application/docker/volumes/pgvecto_rs/"; fi
+        if [ -e "/root/code/docker/volumes/unstructured" ]; then cp -r "/root/code/docker/volumes/unstructured" "/root/application/docker/volumes/"; fi
+        if [ -e "/root/code/docker/nginx/docker-entrypoint.sh" ]; then cp -r "/root/code/docker/nginx/docker-entrypoint.sh" "/root/application/docker/nginx/"; fi
+        if [ -e "/root/code/docker/volumes/weaviate" ]; then cp -r "/root/code/docker/volumes/weaviate" "/root/application/docker/volumes/"; fi
+        mkdir -p "/root/application/docker/volumes/sandbox"
+        if [ -e "/root/code/docker/volumes/sandbox/dependencies" ]; then cp -r "/root/code/docker/volumes/sandbox/dependencies" "/root/application/docker/volumes/sandbox/"; fi
+        if [ -e "/root/code/docker/nginx/nginx.conf.template" ]; then cp -r "/root/code/docker/nginx/nginx.conf.template" "/root/application/docker/nginx/"; fi
+        mkdir -p "/root/application/docker/volumes/couchbase"
+        if [ -e "/root/code/docker/volumes/couchbase/data" ]; then cp -r "/root/code/docker/volumes/couchbase/data" "/root/application/docker/volumes/couchbase/"; fi
+        if [ -e "/root/code/docker/volumes/milvus/etcd" ]; then cp -r "/root/code/docker/volumes/milvus/etcd" "/root/application/docker/volumes/milvus/"; fi
+        if [ -e "/root/code/docker/nginx/https.conf.template" ]; then cp -r "/root/code/docker/nginx/https.conf.template" "/root/application/docker/nginx/"; fi
+        if [ -e "/root/code/docker/volumes/opensearch/data" ]; then cp -r "/root/code/docker/volumes/opensearch/data" "/root/application/docker/volumes/opensearch/"; fi
+        cd /root/application
+        cp docker/.env.example docker/.env
+        sed -i 's/pull_policy: always/pull_policy: if_not_present/g' docker/docker-compose.yaml
+        docker compose -f docker/docker-compose.yaml build
+        docker compose -f docker/docker-compose.yaml pull || true;
